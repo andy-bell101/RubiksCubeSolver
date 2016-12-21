@@ -71,7 +71,12 @@ public:
 		@param Y The desired Y coordinate
 		@param Z The desired Z coordinate
 	*/
-	void VectorFromInts(int X, int Y, int Z);
+	void SetVectorFromInts(int X, int Y, int Z);
+
+	/**
+		Returns a vector created by taking two or three passed colours, converting them to vectors then summing them.
+	*/
+	Vector3 static VectorFromColours(Colour colour1, Colour colour2, Colour colour3 = Colour::NONE);
 
 private:
 	/**

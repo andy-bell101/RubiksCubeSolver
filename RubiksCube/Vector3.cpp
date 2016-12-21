@@ -16,7 +16,7 @@ Vector3::Vector3()
 
 Vector3::Vector3(int X, int Y, int Z)
 {
-	VectorFromInts(X, Y, Z);
+	SetVectorFromInts(X, Y, Z);
 }
 
 Vector3::Vector3(Colour inputColour)
@@ -104,8 +104,10 @@ Vector3 Vector3::ColourToVector(Colour inputColour)
 		return Vector3{ -1, 0, 0 };
 	case Colour::ORANGE:
 		return Vector3{ 0, -1, 0 };
+	case Colour::NONE:
+		return Vector3{ 0, 0, 0 };
 	default:
-		std::cerr << "Vector3::ColourToVector - Passed no colour";
+		std::cerr << "Vector3::ColourToVector - Passed Colour::BLANK";
 		return Vector3{ 0, 0, 0 };
 	}
 }
@@ -115,9 +117,31 @@ int Vector3::Magnitude()
 	return X + Y + Z;
 }
 
-void Vector3::VectorFromInts(int X, int Y, int Z)
+void Vector3::SetVectorFromInts(int X, int Y, int Z)
 {
 	this->X = X;
 	this->Y = Y;
 	this->Z = Z;
+}
+
+Vector3 Vector3::VectorFromColours(Colour colour1, Colour colour2, Colour colour3)
+{
+	if (colour1 == colour2 || colour1 == colour3 || colour2 == colour3)
+	{
+		std::cerr << "Vector3::VectorFromColours passed matching colours";
+	}
+
+	Vector3 vector1{ Vector3::ColourToVector(colour1) };
+	Vector3 vector2{ Vector3::ColourToVector(colour2) };
+	Vector3 vector3{ Vector3::ColourToVector(colour3) };
+	
+	int X;
+	int Y;
+	int Z;
+
+	X = vector1.GetX() + vector2.GetX() + vector3.GetX();
+	Y = vector1.GetY() + vector2.GetY() + vector3.GetY();
+	Z = vector1.GetZ() + vector2.GetZ() + vector3.GetZ();
+
+	return Vector3{ X, Y, Z };
 }

@@ -47,7 +47,34 @@ void Rotation::Rotate(Vector3 &vectorToRotate)
 		}
 	}
 
-	&vectorToRotate.VectorFromInts();
+	vectorToRotate.SetVectorFromInts(rotatedArray[0], rotatedArray[1], rotatedArray[2]);
+}
+
+void Rotation::GenerateRxMatrix(RotationAngles rotation)
+{
+	Rx = {{
+		{ 1, 0               , 0                 },
+		{ 0, cosDeg(rotation), -sinDeg(rotation) },
+		{ 0, sinDeg(rotation),  cosDeg(rotation) }
+	}};
+}
+
+void Rotation::GenerateRyMatrix(RotationAngles rotation)
+{
+	Ry = {{
+		{ cosDeg(rotation), 0, -sinDeg(rotation) },
+		{ 0               , 1, 0                 },
+		{ sinDeg(rotation), 0,  cosDeg(rotation) }
+	}};
+}
+
+void Rotation::GenerateRzMatrix(RotationAngles rotation)
+{
+	Rz = {{
+		{ cosDeg(rotation), -sinDeg(rotation), 0 },
+		{ sinDeg(rotation),  cosDeg(rotation), 0 },
+		{ 0				  , 0				 , 1 }
+	}};
 }
 
 void Rotation::SetupRotation(Vector3 vectorAxis, RotationAngles rotationAngle)
@@ -76,16 +103,13 @@ void Rotation::GenerateRotationMatrix()
 	RotationAngles yAxisRotation{ normalisedRotations[1] };
 	RotationAngles zAxisRotation{ normalisedRotations[2] };
 
+	// Generate the rotations about the individual axes
+	GenerateRxMatrix(xAxisRotation);
+	GenerateRyMatrix(yAxisRotation);
+	GenerateRzMatrix(zAxisRotation);
+
 	// Perform calculations to set up the rotationMatrix
-	rotationMatrix[0][0] = cosDeg(yAxisRotation) * cosDeg(zAxisRotation);
-	rotationMatrix[0][1] = cosDeg(zAxisRotation) * sinDeg(xAxisRotation) * sinDeg(yAxisRotation) - cosDeg(xAxisRotation) * sinDeg(zAxisRotation);
-	rotationMatrix[0][2] = cosDeg(xAxisRotation) * cosDeg(zAxisRotation) * sinDeg(yAxisRotation) + sinDeg(xAxisRotation) * sinDeg(zAxisRotation);
-	rotationMatrix[1][0] = cosDeg(yAxisRotation) * sinDeg(zAxisRotation);
-	rotationMatrix[1][1] = cosDeg(xAxisRotation) * cosDeg(zAxisRotation) + sinDeg(xAxisRotation) * sinDeg(yAxisRotation) * sinDeg(zAxisRotation);
-	rotationMatrix[1][2] = cosDeg(xAxisRotation) * sinDeg(yAxisRotation) * sinDeg(zAxisRotation) - cosDeg(zAxisRotation) * sinDeg(xAxisRotation);
-	rotationMatrix[2][0] = -sinDeg(yAxisRotation);
-	rotationMatrix[2][1] = cosDeg(yAxisRotation) * sinDeg(xAxisRotation);
-	rotationMatrix[2][2] = cosDeg(xAxisRotation) * cosDeg(yAxisRotation);
+	rotationMatrix = MatrixMultiply(Rz, MatrixMultiply(Ry, Rx));
 }
 
 
@@ -121,7 +145,7 @@ int Rotation::sinDeg(RotationAngles rotationAngle)
 	case RotationAngles::NONE:
 		return 0;
 	default:
-		std::cerr << "Rotation::cosDeg passed RotationAngles::BLANK";
+		std::cerr << "Rotation::sinDeg passed RotationAngles::BLANK";
 		return -2;
 	}
 }
@@ -142,7 +166,7 @@ RotationAngles Rotation::InvertRotation(RotationAngles inputRotation)
 	}
 }
 
-array<RotationAngles, 3> Rotation::GlobaliseRotation(Vector3 vectorAxis, RotationAngles inputRotation)
+array<RotationAngles, 3> Rotation::GlobaliseRotation(Vector3 &vectorAxis, RotationAngles inputRotation)
 {
 	array<RotationAngles, 3> returnArray{ RotationAngles::NONE };
 
@@ -172,4 +196,19 @@ array<RotationAngles, 3> Rotation::GlobaliseRotation(Vector3 vectorAxis, Rotatio
 	}
 
 	return returnArray;
+}
+
+matrix3x3_t Rotation::MatrixMultiply(matrix3x3_t &leftMatrix, matrix3x3_t &rightMatrix)
+{
+	matrix3x3_t resultMatrix{};
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			resultMatrix[i][j] = leftMatrix[i][j] * rightMatrix[j][i];
+		}
+	}
+
+	return resultMatrix;
 }
