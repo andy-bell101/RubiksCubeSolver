@@ -17,11 +17,6 @@ Rotation::Rotation(Vector3 vectorAxis, RotationAngles rotationAngle)
 {
 	SetupRotation(vectorAxis, rotationAngle);
 }
-// 
-Vector3 Rotation::PerformRotations(std::array<Vector3, 6> inputVectors)
-{
-	return Vector3();
-}
 
 Colour Rotation::GetColourAxis()
 {
@@ -33,9 +28,26 @@ Vector3 Rotation::GetVectorAxis()
 	return vectorAxis;
 }
 
-Vector3 Rotation::Rotate(Vector3 inputVector)
+void Rotation::Rotate(Vector3 &vectorToRotate)
 {
-	return Vector3();
+	int arrayToRotate[3] = { vectorToRotate.GetX(), vectorToRotate.GetY(), vectorToRotate.GetZ() };
+	int rotatedArray[3] = { 0, 0, 0 };
+	
+	// i represents rows in the rotatedArray
+	for (int i = 0; i < 3; i++)
+	{
+		// j represents rows in the rotationMatrix
+		for (int j = 0; j < 3; j++)
+		{
+			// k represents columns in the rotationMatrix
+			for (int k = 0; k < 3; k++)
+			{
+				rotatedArray[i] += rotationMatrix[j][k] * arrayToRotate[k];
+			}
+		}
+	}
+
+	&vectorToRotate.VectorFromInts();
 }
 
 void Rotation::SetupRotation(Vector3 vectorAxis, RotationAngles rotationAngle)
@@ -45,27 +57,26 @@ void Rotation::SetupRotation(Vector3 vectorAxis, RotationAngles rotationAngle)
 	this->rotationAngle = rotationAngle;
 }
 
-void Rotation::GenerateRotationMatrix(Colour colourAxis, RotationAngles rotationAngle)
+void Rotation::GenerateRotationMatrix()
 {
-	GenerateRotationMatrix(Vector3::ColourToVector(colourAxis), rotationAngle);
-}
-
-void Rotation::GenerateRotationMatrix(Vector3 vectorAxis, RotationAngles rotationAngle)
-{
+	// Check that the vectorAxis is a valid colour vector. If not throw error.
 	if (vectorAxis.Magnitude()!= 1)
 	{
-		std::cerr << "Vector3::ToColour() - Vector has magnitude not equal to 1: ("
+		std::cerr << "Rotation::GenerateRotationMatrix() - Vector has magnitude not equal to 1: ("
 			+ to_string(vectorAxis.GetX()) + "," + to_string(vectorAxis.GetY()) + "," + to_string(vectorAxis.GetZ()) + ")";
 		return;
 	}
 
 	array<RotationAngles, 3> normalisedRotations{RotationAngles::NONE};
-	normalisedRotations = GlobaliseRotation(vectorAxis, rotationAngle);
 
+	// Ensure that the x, y, and z axis rotations represent rotations about the global axes rather their inverses (i.e. stop rotations about
+	// the -x axis)
+	normalisedRotations = GlobaliseRotation(vectorAxis, rotationAngle);
 	RotationAngles xAxisRotation{ normalisedRotations[0] };
 	RotationAngles yAxisRotation{ normalisedRotations[1] };
 	RotationAngles zAxisRotation{ normalisedRotations[2] };
 
+	// Perform calculations to set up the rotationMatrix
 	rotationMatrix[0][0] = cosDeg(yAxisRotation) * cosDeg(zAxisRotation);
 	rotationMatrix[0][1] = cosDeg(zAxisRotation) * sinDeg(xAxisRotation) * sinDeg(yAxisRotation) - cosDeg(xAxisRotation) * sinDeg(zAxisRotation);
 	rotationMatrix[0][2] = cosDeg(xAxisRotation) * cosDeg(zAxisRotation) * sinDeg(yAxisRotation) + sinDeg(xAxisRotation) * sinDeg(zAxisRotation);

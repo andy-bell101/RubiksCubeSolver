@@ -16,9 +16,7 @@ Vector3::Vector3()
 
 Vector3::Vector3(int X, int Y, int Z)
 {
-	this->X = X;
-	this->Y = Y;
-	this->Z = Z;
+	VectorFromInts(X, Y, Z);
 }
 
 Vector3::Vector3(Colour inputColour)
@@ -48,8 +46,10 @@ int Vector3::GetZ()
 
 Colour Vector3::ToColour()
 {
+	// Check that the vector correctly represents a colour, must only have one non-zero component.
 	if (Magnitude() != 1)
 	{
+		// throw error
 		std::cerr << "Vector3::ToColour() - Vector has magnitude not equal to 1: ("
 			+ to_string(X) + "," + to_string(Y) + "," + to_string(Z) + ")";
 		return Colour::NONE;
@@ -106,11 +106,18 @@ Vector3 Vector3::ColourToVector(Colour inputColour)
 		return Vector3{ 0, -1, 0 };
 	default:
 		std::cerr << "Vector3::ColourToVector - Passed no colour";
-		return Vector3{ 0,0,0 };
+		return Vector3{ 0, 0, 0 };
 	}
 }
 
 int Vector3::Magnitude()
 {
 	return X + Y + Z;
+}
+
+void Vector3::VectorFromInts(int X, int Y, int Z)
+{
+	this->X = X;
+	this->Y = Y;
+	this->Z = Z;
 }

@@ -65,9 +65,28 @@ public:
 	*/
 	int Magnitude();
 
+	/**
+		Reassigns the vector's components from the passed integers.
+		@param X The desired X coordinate
+		@param Y The desired Y coordinate
+		@param Z The desired Z coordinate
+	*/
+	void VectorFromInts(int X, int Y, int Z);
+
 private:
+	/**
+		An integer representing the vector's X coordinate
+	*/
 	int X;
+
+	/**
+		An integer representing the vector's Y coordinate
+	*/
 	int Y;
+
+	/**
+		An integer representing the vector's Z coordinate
+	*/
 	int Z;
 
 };
