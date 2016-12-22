@@ -45,3 +45,8 @@ Colour Tile::GetTileFace()
 {
 	return tileDirection.ToColour();
 }
+
+void Tile::Rotate(Rotation & rotation)
+{
+	rotation.Rotate(tileDirection);
+}

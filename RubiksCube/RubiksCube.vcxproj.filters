@@ -45,10 +45,7 @@
     <ClInclude Include="Piece.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EdgePiece.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CornerPiece.h">
+    <ClInclude Include="Face.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,10 +68,7 @@
     <ClCompile Include="Piece.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EdgePiece.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CornerPiece.cpp">
+    <ClCompile Include="Face.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

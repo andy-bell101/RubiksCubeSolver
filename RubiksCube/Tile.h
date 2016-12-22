@@ -2,6 +2,7 @@
 
 #include "Colour.h"
 #include "Vector3.h"
+#include "Rotation.h"
 
 class Tile
 {
@@ -43,6 +44,12 @@ public:
 		@return Colour The tile's direction as a colour.
 	*/
 	Colour GetTileFace();
+
+	/**
+	Rotates the tile's direction by the passed rotation.
+	@param &rotation Reference to the current rotation instance.
+	*/
+	void Rotate(Rotation &rotation);
 
 private:
 	/**

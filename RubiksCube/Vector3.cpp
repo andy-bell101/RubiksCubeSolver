@@ -114,7 +114,7 @@ Vector3 Vector3::ColourToVector(Colour inputColour)
 
 int Vector3::Magnitude()
 {
-	return X + Y + Z;
+	return abs(X) + abs(Y) + abs(Z);
 }
 
 void Vector3::SetVectorFromInts(int X, int Y, int Z)
@@ -124,16 +124,24 @@ void Vector3::SetVectorFromInts(int X, int Y, int Z)
 	this->Z = Z;
 }
 
-Vector3 Vector3::VectorFromColours(Colour colour1, Colour colour2, Colour colour3)
+Vector3 Vector3::VectorFromColours(std::list<Colour> inputColours)
 {
-	if (colour1 == colour2 || colour1 == colour3 || colour2 == colour3)
+	int index{};
+	Colour colours[3]{Colour::NONE};
+
+	for (std::list<Colour>::const_iterator i = inputColours.begin(), end = inputColours.end(); i != end; ++i)
+	{
+		colours[index] = *i;
+	}
+
+	if (colours[0] == colours[1] || colours[0] == colours[2] || colours[1] == colours[2])
 	{
 		std::cerr << "Vector3::VectorFromColours passed matching colours";
 	}
 
-	Vector3 vector1{ Vector3::ColourToVector(colour1) };
-	Vector3 vector2{ Vector3::ColourToVector(colour2) };
-	Vector3 vector3{ Vector3::ColourToVector(colour3) };
+	Vector3 vector1{ Vector3::ColourToVector( colours[0]) };
+	Vector3 vector2{ Vector3::ColourToVector( colours[1]) };
+	Vector3 vector3{ Vector3::ColourToVector( colours[2]) };
 	
 	int X;
 	int Y;
@@ -144,4 +152,16 @@ Vector3 Vector3::VectorFromColours(Colour colour1, Colour colour2, Colour colour
 	Z = vector1.GetZ() + vector2.GetZ() + vector3.GetZ();
 
 	return Vector3{ X, Y, Z };
+}
+
+bool Vector3::CheckVectorForColour(Colour searchColour)
+{
+	Vector3 tempVector{ Vector3::ColourToVector(searchColour) };
+
+	if (tempVector.GetX() == X || tempVector.GetY() == Y || tempVector.GetZ() == Z)
+	{
+		return true;
+	}
+
+	return false;
 }

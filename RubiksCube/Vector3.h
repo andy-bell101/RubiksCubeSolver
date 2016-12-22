@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Colour.h"
+#include <list>
 
 class Vector3
 {
@@ -76,7 +77,14 @@ public:
 	/**
 		Returns a vector created by taking two or three passed colours, converting them to vectors then summing them.
 	*/
-	Vector3 static VectorFromColours(Colour colour1, Colour colour2, Colour colour3 = Colour::NONE);
+	Vector3 static VectorFromColours(std::list<Colour> colours);
+
+	/**
+		Determines whether any of the vector's components match up to the passed colour.
+		@param searchColour The colour to search the vector's components for.
+		@return bool Return true if the searchColour is in the vector's components, otherwise return false.
+	*/
+	bool CheckVectorForColour( Colour searchColour );
 
 private:
 	/**

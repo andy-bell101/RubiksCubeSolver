@@ -27,12 +27,6 @@ public:
 		@param rotationAngle The amount of rotation that will be performed by the class.
 	*/
 	Rotation(Vector3 vectorAxis, RotationAngles rotationAngle);
-	
-	/**
-		Gets the colour of the axis the rotation is currently set to.
-		@return Colour The colour of the rotation's axis.
-	*/
-	Colour GetColourAxis();
 
 	/**
 		Gets the vector axis of the rotation.
@@ -40,12 +34,13 @@ public:
 	*/
 	Vector3 GetVectorAxis();
 
-private:
 	/**
-		Member variable to represent the rotation's colour axis.
+	Multiplies the passed vector by the rotationMatrix and reassigns the vector to become the rotated vector.
+	@param &vectorToRotate A reference to the vector that is desired to be rotated.
 	*/
-	Colour colourAxis{ Colour::NONE };
+	void Rotate(Vector3 &vectorToRotate);
 
+private:
 	/**
 		Member variable to represent the rotation's vector axis.
 	*/
@@ -116,12 +111,6 @@ private:
 		@return matrix3x3_t Returns the result of the multiplication as a 3x3 matrix.
 	*/
 	matrix3x3_t MatrixMultiply(matrix3x3_t &leftMatrix, matrix3x3_t &rightMatrix);
-
-	/**
-		Multiplies the passed vector by the rotationMatrix and reassigns the vector to become the rotated vector.
-		@param &vectorToRotate A reference to the vector that is desired to be rotated.
-	*/
-	void Rotate(Vector3 &vectorToRotate);
 
 	/**
 		Generates the correct Rx rotation matrix.

@@ -18,11 +18,6 @@ Rotation::Rotation(Vector3 vectorAxis, RotationAngles rotationAngle)
 	SetupRotation(vectorAxis, rotationAngle);
 }
 
-Colour Rotation::GetColourAxis()
-{
-	return colourAxis;
-}
-
 Vector3 Rotation::GetVectorAxis()
 {
 	return vectorAxis;
@@ -54,7 +49,7 @@ void Rotation::GenerateRxMatrix(RotationAngles rotation)
 {
 	Rx = {{
 		{ 1, 0               , 0                 },
-		{ 0, cosDeg(rotation), -sinDeg(rotation) },
+		{ 0, cosDeg(rotation), -1*sinDeg(rotation) },
 		{ 0, sinDeg(rotation),  cosDeg(rotation) }
 	}};
 }
@@ -62,7 +57,7 @@ void Rotation::GenerateRxMatrix(RotationAngles rotation)
 void Rotation::GenerateRyMatrix(RotationAngles rotation)
 {
 	Ry = {{
-		{ cosDeg(rotation), 0, -sinDeg(rotation) },
+		{ cosDeg(rotation), 0, -1*sinDeg(rotation) },
 		{ 0               , 1, 0                 },
 		{ sinDeg(rotation), 0,  cosDeg(rotation) }
 	}};
@@ -71,7 +66,7 @@ void Rotation::GenerateRyMatrix(RotationAngles rotation)
 void Rotation::GenerateRzMatrix(RotationAngles rotation)
 {
 	Rz = {{
-		{ cosDeg(rotation), -sinDeg(rotation), 0 },
+		{ cosDeg(rotation), -1*sinDeg(rotation), 0 },
 		{ sinDeg(rotation),  cosDeg(rotation), 0 },
 		{ 0				  , 0				 , 1 }
 	}};
@@ -80,8 +75,9 @@ void Rotation::GenerateRzMatrix(RotationAngles rotation)
 void Rotation::SetupRotation(Vector3 vectorAxis, RotationAngles rotationAngle)
 {
 	this->vectorAxis = vectorAxis;
-	this->colourAxis = vectorAxis.ToColour();
 	this->rotationAngle = rotationAngle;
+
+	GenerateRotationMatrix();
 }
 
 void Rotation::GenerateRotationMatrix()
@@ -94,7 +90,7 @@ void Rotation::GenerateRotationMatrix()
 		return;
 	}
 
-	array<RotationAngles, 3> normalisedRotations{RotationAngles::NONE};
+	array<RotationAngles, 3> normalisedRotations{RotationAngles::NONE, RotationAngles::NONE, RotationAngles::NONE};
 
 	// Ensure that the x, y, and z axis rotations represent rotations about the global axes rather their inverses (i.e. stop rotations about
 	// the -x axis)
@@ -168,7 +164,7 @@ RotationAngles Rotation::InvertRotation(RotationAngles inputRotation)
 
 array<RotationAngles, 3> Rotation::GlobaliseRotation(Vector3 &vectorAxis, RotationAngles inputRotation)
 {
-	array<RotationAngles, 3> returnArray{ RotationAngles::NONE };
+	array<RotationAngles, 3> returnArray{ RotationAngles::NONE, RotationAngles::NONE, RotationAngles::NONE};
 
 	if (vectorAxis.GetX() > 0)
 	{
@@ -201,12 +197,20 @@ array<RotationAngles, 3> Rotation::GlobaliseRotation(Vector3 &vectorAxis, Rotati
 matrix3x3_t Rotation::MatrixMultiply(matrix3x3_t &leftMatrix, matrix3x3_t &rightMatrix)
 {
 	matrix3x3_t resultMatrix{};
+	//FIXME: This is fucked. It's nowhere near actual matrix multiplication.
 
+	// i represents rows in the resultMatrix.
 	for (int i = 0; i < 3; i++)
 	{
+		// j represents columns in the resultMatrix.
 		for (int j = 0; j < 3; j++)
 		{
-			resultMatrix[i][j] = leftMatrix[i][j] * rightMatrix[j][i];
+			resultMatrix[i][j] = 0;
+			// k represents to iterate in the actual multiplication.
+			for (int k = 0; k < 3; k++)
+			{
+				resultMatrix[i][j] += leftMatrix[i][k] * rightMatrix[k][j];
+			}
 		}
 	}
 
