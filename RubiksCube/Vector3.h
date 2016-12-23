@@ -80,6 +80,11 @@ public:
 	Vector3 static VectorFromColours(std::list<Colour> colours);
 
 	/**
+		Returns a vector created by taking two or three passed colours, converting them to vectors then summing them.
+	*/
+	std::list<Colour> static ColoursFromVector(Vector3 &inputVector);
+
+	/**
 		Determines whether any of the vector's components match up to the passed colour.
 		@param searchColour The colour to search the vector's components for.
 		@return bool Return true if the searchColour is in the vector's components, otherwise return false.

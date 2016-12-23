@@ -127,11 +127,12 @@ void Vector3::SetVectorFromInts(int X, int Y, int Z)
 Vector3 Vector3::VectorFromColours(std::list<Colour> inputColours)
 {
 	int index{};
-	Colour colours[3]{Colour::NONE};
+	Colour colours[3]{Colour::NONE, Colour::NONE, Colour::NONE};
 
 	for (std::list<Colour>::const_iterator i = inputColours.begin(), end = inputColours.end(); i != end; ++i)
 	{
 		colours[index] = *i;
+		index++;
 	}
 
 	if (colours[0] == colours[1] || colours[0] == colours[2] || colours[1] == colours[2])
@@ -152,6 +153,44 @@ Vector3 Vector3::VectorFromColours(std::list<Colour> inputColours)
 	Z = vector1.GetZ() + vector2.GetZ() + vector3.GetZ();
 
 	return Vector3{ X, Y, Z };
+}
+
+std::list<Colour> Vector3::ColoursFromVector(Vector3 &inputVector)
+{
+	int X = inputVector.GetX();
+	int Y = inputVector.GetY();
+	int Z = inputVector.GetZ();
+
+	std::list<Colour> outputList{};
+
+	Vector3 testVector{ 0, 0, 0 };
+	Colour tempColour{ Colour::NONE };
+
+	testVector.SetVectorFromInts(X, 0, 0);
+	tempColour = testVector.ToColour();
+
+	if ( tempColour != Colour::NONE )
+	{
+		outputList.push_back(tempColour);
+	}
+
+	testVector.SetVectorFromInts(0, Y, 0);
+	tempColour = testVector.ToColour();
+
+	if (tempColour != Colour::NONE)
+	{
+		outputList.push_back(tempColour);
+	}
+
+	testVector.SetVectorFromInts(0, 0, Z);
+	tempColour = testVector.ToColour();
+
+	if (tempColour != Colour::NONE)
+	{
+		outputList.push_back(tempColour);
+	}
+
+	return outputList;
 }
 
 bool Vector3::CheckVectorForColour(Colour searchColour)

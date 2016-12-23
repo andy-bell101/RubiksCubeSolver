@@ -12,13 +12,15 @@ Face::~Face()
 {
 }
 
-void Face::AddPiecesToFace(pieces_t &inputPieces)
+void Face::AddPiecesToFace(piecesRef_t &inputPieces)
 {
-	for (pieces_t::const_iterator i = inputPieces.begin(), end = inputPieces.end(); i != end; ++i)
+	piecesRef.clear();
+
+	for (piecesRef_t::const_iterator i = inputPieces.begin(), end = inputPieces.end(); i != end; ++i)
 	{
 		if ( ( *i )->PieceIsOnFace( faceColour ) == true )
 		{
-			pieces.push_back(*i);
+			piecesRef.push_back(*i);
 		}
 	}
 }
@@ -30,8 +32,21 @@ Colour Face::GetFaceColour()
 
 void Face::Rotate(Rotation &rotation)
 {
-	for (pieces_t::iterator i = pieces.begin(), end = pieces.end(); i != end; ++i)
+	for (piecesRef_t::iterator i = piecesRef.begin(), end = piecesRef.end(); i != end; ++i)
 	{
 		(*i)->Rotate(rotation);
 	}
+}
+
+bool Face::IsSolved()
+{
+	for (piecesRef_t::iterator i = piecesRef.begin(), end = piecesRef.end(); i != end; ++i)
+	{
+		if ((*i)->IsSolved() == false)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }

@@ -12,6 +12,11 @@ Piece::Piece(Piece::pieceColours_t colours)
 	SetPiece(colours);
 }
 
+Piece::Piece(Vector3 &buildVector)
+{
+	SetPiece(Vector3::ColoursFromVector(buildVector));
+}
+
 Piece::~Piece()
 {
 }
@@ -61,6 +66,19 @@ void Piece::Rotate(Rotation &rotation)
 	}
 }
 
+bool Piece::HasColourOnFace(Colour tileColour, Colour faceColour)
+{
+	for (pieceTiles_t::iterator i = pieceTiles.begin(), end = pieceTiles.end(); i != end; ++i)
+	{
+		if ((*i).GetTileColour() == tileColour && (*i).GetTileFace() == faceColour)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void Piece::SetPiece(Piece::pieceColours_t colours)
 {
 	pieceColours = pieceColours_t{};
@@ -73,6 +91,8 @@ void Piece::SetPiece(Piece::pieceColours_t colours)
 		this->pieceColours.push_back( *i );
 		this->pieceTiles.push_back( (Tile( *i )) );
 	}
+
+	numTiles = pieceTiles.size();
 
 	SetPiecePosition();
 }

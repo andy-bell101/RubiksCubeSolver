@@ -28,8 +28,8 @@ public:
 	Colour GetTileColour();
 
 	/**
-	Returns the direction of the tile (which also represents the face it lies on).
-	@return Vector3 The tile's direction.
+		Returns the direction of the tile (which also represents the face it lies on).
+		@return Vector3 The tile's direction.
 	*/
 	Vector3 GetTileDirection();
 
@@ -46,8 +46,8 @@ public:
 	Colour GetTileFace();
 
 	/**
-	Rotates the tile's direction by the passed rotation.
-	@param &rotation Reference to the current rotation instance.
+		Rotates the tile's direction by the passed rotation.
+		@param &rotation Reference to the current rotation instance.
 	*/
 	void Rotate(Rotation &rotation);
 

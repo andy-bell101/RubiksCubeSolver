@@ -12,6 +12,7 @@ using matrix3x3_t = std::array<std::array<int, 3>, 3>;
 class Rotation
 {
 public:
+	Rotation();
 	/**
 		Class constructor that takes in a colour corresponding to a cube face and a rotation angle indicating which way and how much 
 		the rotation should operate.
@@ -35,8 +36,8 @@ public:
 	Vector3 GetVectorAxis();
 
 	/**
-	Multiplies the passed vector by the rotationMatrix and reassigns the vector to become the rotated vector.
-	@param &vectorToRotate A reference to the vector that is desired to be rotated.
+		Multiplies the passed vector by the rotationMatrix and reassigns the vector to become the rotated vector.
+		@param &vectorToRotate A reference to the vector that is desired to be rotated.
 	*/
 	void Rotate(Vector3 &vectorToRotate);
 
@@ -72,35 +73,56 @@ private:
 	matrix3x3_t rotationMatrix;
 
 	/**
-		Method called from constructors to correctly assign the colourAxis, vectorAxis, and rotationAngle member variables.
+		Method called to correctly assign the colourAxis, vectorAxis, and rotationAngle member variables.
+		@param vectorAxis The vector about which we wish to rotate.
+		@param rotationAngle The amount we wish to rotate by.
 	*/
 
-	void SetupRotation( Vector3 vectorAxis, RotationAngles rotationAngle);
+	void SetupRotation(Vector3 vectorAxis, RotationAngles rotationAngle);
+
+	/**
+		Overloaded version of SetupRotation that accepts a colour instead of a vector.
+	*/
+public:
+	void SetupRotation(Colour colourAxis, RotationAngles rotationAngle);
+
+	/**
+		Method to get the rotation's colour axis.
+		@return Colour The rotation's colour axis.
+	*/
+	Colour GetRotationColourAxis();
+
+private:
 	/**
 		Generates the desired rotation matrix in global coordinates based on the instance's vectorAxis and rotationAngle.
 	*/
-
 	void GenerateRotationMatrix();
+
 	/**
 		cos function that only returns integers. These numbers are created based on the desired rotation angle.
+		@param rotationAngle The rotation angle that will be used in the calculation.
 	*/
 
 	int cosDeg(RotationAngles rotationAngle);
 
 	/**
 		sin function that only returns integers. These numbers are created based on the desired rotation angle.
+		@param rotationAngle The rotation angle that will be used in the calculation.
 	*/
 	int sinDeg(RotationAngles rotationAngle);
 
 	/**
 		Reverses the rotation direction. This is used in the GlobaliseRotation method to ensure that all rotations are performed
 		in global coordinates.
+		@param inputRotation If required this parameter will be inverted to account for changing from local to global coordinates.
 	*/
 	RotationAngles InvertRotation(RotationAngles inputRotation);
 
 	/**
 		Converts the rotation to be about the global axes in case we try to rotate about a negative axis (i.e. ensure we rotate about
 		+x rather than -x to make sure we calculate the rotation correctly).
+		@param &vectorAxis A reference to the vector we wish to rotate about.
+		@param inputRotation The amount we wish to rotate by.
 	*/
 	std::array<RotationAngles, 3> GlobaliseRotation(Vector3 &vectorAxis, RotationAngles inputRotation);
 
@@ -113,17 +135,20 @@ private:
 	matrix3x3_t MatrixMultiply(matrix3x3_t &leftMatrix, matrix3x3_t &rightMatrix);
 
 	/**
-		Generates the correct Rx rotation matrix.
+		Generates the correct Rx rotation matrix based on a passed rotation angle.
+		@param rotation The desired rotation.
 	*/
 	void GenerateRxMatrix(RotationAngles rotation);
 
 	/**
-		Generates the correct Ry rotation matrix.
+		Generates the correct Ry rotation matrix based on a passed rotation angle.
+		@param rotation The desired rotation.
 	*/
 	void GenerateRyMatrix(RotationAngles rotation);
 
 	/**
-		Generates the correct Rz rotation matrix.
+		Generates the correct Rz rotation matrix based on a passed rotation angle.
+		@param rotation The desired rotation.
 	*/
 	void GenerateRzMatrix(RotationAngles rotation);
 };

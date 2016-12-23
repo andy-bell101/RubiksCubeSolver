@@ -6,6 +6,10 @@
 
 using namespace std;
 
+Rotation::Rotation()
+{
+}
+
 // Constructor that will build the rotation from a colour direction and a rotation angle
 Rotation::Rotation(Colour colourAxis, RotationAngles rotationAngle)
 {
@@ -28,17 +32,13 @@ void Rotation::Rotate(Vector3 &vectorToRotate)
 	int arrayToRotate[3] = { vectorToRotate.GetX(), vectorToRotate.GetY(), vectorToRotate.GetZ() };
 	int rotatedArray[3] = { 0, 0, 0 };
 	
-	// i represents rows in the rotatedArray
+	// i represents rows in the rotatedArray.
 	for (int i = 0; i < 3; i++)
 	{
-		// j represents rows in the rotationMatrix
-		for (int j = 0; j < 3; j++)
+		// j represents to iterate in the actual multiplication.
+		for (int j= 0; j < 3; j++)
 		{
-			// k represents columns in the rotationMatrix
-			for (int k = 0; k < 3; k++)
-			{
-				rotatedArray[i] += rotationMatrix[j][k] * arrayToRotate[k];
-			}
+			rotatedArray[i] += rotationMatrix[i][j] * arrayToRotate[j];
 		}
 	}
 
@@ -70,6 +70,17 @@ void Rotation::GenerateRzMatrix(RotationAngles rotation)
 		{ sinDeg(rotation),  cosDeg(rotation), 0 },
 		{ 0				  , 0				 , 1 }
 	}};
+}
+
+void Rotation::SetupRotation(Colour colourAxis, RotationAngles rotationAngle)
+{
+	Vector3 vectorAxis{ colourAxis };
+	SetupRotation(vectorAxis, rotationAngle);
+}
+
+Colour Rotation::GetRotationColourAxis()
+{
+	return vectorAxis.ToColour();
 }
 
 void Rotation::SetupRotation(Vector3 vectorAxis, RotationAngles rotationAngle)
@@ -133,11 +144,11 @@ int Rotation::sinDeg(RotationAngles rotationAngle)
 	switch (rotationAngle)
 	{
 	case RotationAngles::CLOCKWISE:
-		return 1;
+		return -1;
 	case RotationAngles::DOUBLETURN:
 		return 0;
 	case RotationAngles::ANTICLOCKWISE:
-		return -1;
+		return 1;
 	case RotationAngles::NONE:
 		return 0;
 	default:
@@ -197,7 +208,6 @@ array<RotationAngles, 3> Rotation::GlobaliseRotation(Vector3 &vectorAxis, Rotati
 matrix3x3_t Rotation::MatrixMultiply(matrix3x3_t &leftMatrix, matrix3x3_t &rightMatrix)
 {
 	matrix3x3_t resultMatrix{};
-	//FIXME: This is fucked. It's nowhere near actual matrix multiplication.
 
 	// i represents rows in the resultMatrix.
 	for (int i = 0; i < 3; i++)

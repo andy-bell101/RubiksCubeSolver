@@ -7,5 +7,6 @@ enum class Colour
 	YELLOW,
 	ORANGE,
 	GREEN,
-	NONE
+	NONE,
+	BLANK
 };
