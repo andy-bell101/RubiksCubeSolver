@@ -12,17 +12,17 @@ Face::~Face()
 {
 }
 
-void Face::AddPiecesToFace(piecesRef_t &inputPieces)
+void Face::AddPieceToFace(Piece* inputPiece)
+{
+	if (inputPiece->PieceIsOnFace(faceColour) == true)
+	{
+		piecesRef.push_back(inputPiece);
+	}
+}
+
+void Face::ResetPieces()
 {
 	piecesRef.clear();
-
-	for (piecesRef_t::const_iterator i = inputPieces.begin(), end = inputPieces.end(); i != end; ++i)
-	{
-		if ( ( *i )->PieceIsOnFace( faceColour ) == true )
-		{
-			piecesRef.push_back(*i);
-		}
-	}
 }
 
 Colour Face::GetFaceColour()
@@ -32,21 +32,44 @@ Colour Face::GetFaceColour()
 
 void Face::Rotate(Rotation &rotation)
 {
-	for (piecesRef_t::iterator i = piecesRef.begin(), end = piecesRef.end(); i != end; ++i)
+	for each (Piece* pieceRef in piecesRef)
 	{
-		(*i)->Rotate(rotation);
+		pieceRef->Rotate(rotation);
 	}
 }
 
 bool Face::IsSolved()
 {
-	for (piecesRef_t::iterator i = piecesRef.begin(), end = piecesRef.end(); i != end; ++i)
+	for each (Piece* pieceRef in piecesRef)
 	{
-		if ((*i)->IsSolved() == false)
-		{
-			return false;
-		}
+		pieceRef->IsSolved();
 	}
 
 	return true;
+}
+
+bool Face::TileIsOnFace(Piece* piece, Colour tileColour)
+{
+	if (PieceIsOnFace(piece) == true)
+	{
+		if (piece->HasColour(tileColour))
+		{
+			piece->TileIsOnFace(tileColour, faceColour);
+		}
+	}
+
+	return false;
+}
+
+bool Face::PieceIsOnFace(Piece* piece)
+{
+	for each (Piece* pieceRef in piecesRef)
+	{
+		if (pieceRef == piece)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

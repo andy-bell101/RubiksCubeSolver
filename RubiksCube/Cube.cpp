@@ -4,6 +4,8 @@
 
 Cube::Cube()
 {
+	BuildSolvedCube();
+
 }
 
 
@@ -14,7 +16,6 @@ Cube::~Cube()
 void Cube::BuildSolvedCube()
 {
 	pieces.clear();
-	Colour testColour;
 
 	// Create the cube's faces.
 	// This code is shit
@@ -75,6 +76,16 @@ bool Cube::IsSolved()
 	return true;
 }
 
+void Cube::Shuffle(int shuffleCount)
+{
+	//TODO: Implement this function.
+}
+
+void Cube::SolveCube()
+{
+	TopCross();
+}
+
 Colour Cube::GetOpposingColour(Colour inputColour)
 {
 	switch (inputColour)
@@ -108,12 +119,75 @@ void Cube::ResetFaceReferences()
 	{
 		if (face.GetFaceColour() != opposingColour)
 		{
-			face.Rotate(rotation);
+			face.ResetPieces();
+
+			for each (Piece piece in pieces)
+			{
+				face.AddPieceToFace(&piece);
+			}
 		}
 	}
 }
 
-void Cube::SetCubeDirections(Colour faceColour, Direction direction)
+void Cube::SetCubeDirections(Colour faceColour)
 {
+	ClearCubeDirections();
 
+	// TODO: This is where top and bottom hard coding happens. Fix this.
+	directionToColour[(int)Direction::BOTTOM] = Colour::WHITE;
+	directionToColour[(int)Direction::TOP] = Colour::YELLOW;
+
+	directionToColour[(int)Direction::FRONT] = faceColour;
+	directionToColour[(int)Direction::BACK] = GetOpposingColour(faceColour);
+
+	directionToColour[(int)Direction::RIGHT] = Vector3::CrossProduct(directionToColour[(int)Direction::TOP], directionToColour[(int)Direction::FRONT]);
+	directionToColour[(int)Direction::LEFT] = GetOpposingColour(directionToColour[(int)Direction::RIGHT]);
+}
+
+Direction Cube::GetOpposingDirection(Direction inputDirection)
+{
+	switch (inputDirection)
+	{
+	case Direction::FRONT:
+		return Direction::BACK;
+	case Direction::BACK:
+		return Direction::FRONT;
+	case Direction::LEFT:
+		return Direction::RIGHT;
+	case Direction::RIGHT:
+		return Direction::LEFT;
+	case Direction::TOP:
+		return Direction::BOTTOM;
+	case Direction::BOTTOM:
+		return Direction::TOP;
+	default:
+		std::cerr << "Cube::GetOpposingDirection passed Direction::NONE";
+		return Direction::NONE;
+	}
+}
+
+void Cube::ClearCubeDirections()
+{
+	for (int i = 0; i < (int)directionToColour.size(); i++)
+	{
+		directionToColour[i] = Colour::NONE;
+	}
+}
+
+void Cube::TopCross()
+{
+	piecesRef_t bottomEdgePieces{};
+
+	Colour colourToFind{ directionToColour[(int)Direction::BOTTOM] };
+
+	Piece debugPiece{};
+
+	for each (Piece piece in pieces)
+	{
+		if (piece.IsEdgePiece() && piece.HasColour(colourToFind))
+		{
+			bottomEdgePieces.push_back(&piece);
+			debugPiece = piece;
+		}
+	}
 }

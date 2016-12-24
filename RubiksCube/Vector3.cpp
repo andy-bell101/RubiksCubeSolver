@@ -155,6 +155,22 @@ Vector3 Vector3::VectorFromColours(std::list<Colour> inputColours)
 	return Vector3{ X, Y, Z };
 }
 
+Vector3 Vector3::CrossProduct(Vector3 & leftVector, Vector3 & rightVector)
+{
+	int x{ 0 }, y{ 0 }, z{ 0 };
+
+	x = leftVector.GetY() * rightVector.GetZ() - leftVector.GetZ() * rightVector.GetY();
+	y = leftVector.GetZ() * rightVector.GetX() - leftVector.GetX() * rightVector.GetZ();
+	z = leftVector.GetX() * rightVector.GetY() - leftVector.GetY() * rightVector.GetX();
+
+	return Vector3{ x,y,z };
+}
+
+Colour Vector3::CrossProduct(Colour & leftColour, Colour & rightColour)
+{
+	return CrossProduct(ColourToVector(leftColour), ColourToVector(rightColour)).ToColour();
+}
+
 std::list<Colour> Vector3::ColoursFromVector(Vector3 &inputVector)
 {
 	int X = inputVector.GetX();
@@ -198,6 +214,16 @@ bool Vector3::CheckVectorForColour(Colour searchColour)
 	Vector3 tempVector{ Vector3::ColourToVector(searchColour) };
 
 	if (tempVector.GetX() == X || tempVector.GetY() == Y || tempVector.GetZ() == Z)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool Vector3::Equals(Vector3 & comparisonVector)
+{
+	if (X == comparisonVector.GetX() && Y == comparisonVector.GetY() && Z == comparisonVector.GetZ())
 	{
 		return true;
 	}

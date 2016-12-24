@@ -83,6 +83,13 @@ public:
 	bool IsSolved();
 
 	/**
+		Determines whether this piece is in the correct position but NOT fully solved. Returns true if and only if
+		the piece is in the right place.
+		@return bool Returns true if the piece is solved, false otherwise.
+	*/
+	bool PositionSolved();
+
+	/**
 		Determines whether this piece has a tile which matches the passed colour.
 		@param colourToFind The colour to search the piece for.
 		@return bool Returns true if the colour is found, false otherwise.
@@ -109,5 +116,22 @@ public:
 		@return bool Returns true if the piece has the tileColour and that tile is on the face corresponding to the passed face colour.
 	*/
 	bool HasColourOnFace(Colour tileColour, Colour faceColour);
+
+	/**
+		Returns true if the piece is an edge piece.
+		@return bool Returns true if the piece is an edge piece, returns false otherwise.
+	*/
+	bool IsEdgePiece();
+
+	/**
+		Returns true if the piece is a corner piece.
+		@return bool Returns true if the piece is a corner piece, returns false otherwise.
+	*/
+	bool IsCornerPiece();
+
+	/**
+		Returns true if the piece has a tile of the passed colour that is on the face of the passed colour.
+	*/
+	bool TileIsOnFace(Colour tileColour, Colour faceColour);
 };
 

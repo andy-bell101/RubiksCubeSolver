@@ -29,7 +29,12 @@ public:
 		@param &inputPieces The list of pieces passed from the Cube class, from which the pieces on this face will be added to 
 							the piece member variable.
 	*/
-	void AddPiecesToFace( piecesRef_t &inputPieces );
+	void AddPieceToFace( Piece* inputPiece );
+
+	/**
+		Clears the pieces list for the face so that new faces can be added.
+	*/
+	void ResetPieces();
 
 	/**
 		Returns the colour of the face.
@@ -47,6 +52,18 @@ public:
 		@return bool Returns true if the face is solved, false otherwise.
 	*/
 	bool IsSolved();
+
+	/**
+		Returns true if the tile of the passed colour is on this face.
+		@return bool Returns true if the tile of the passed colour is on this face, returns false otherwise.
+	*/
+	bool TileIsOnFace(Piece* piece,Colour tileColour);
+
+	/**
+		Returns true if the passed piece is on this face.
+		@return bool Returns true if the passed piece is on this face, returns false otherwise.
+	*/
+	bool PieceIsOnFace(Piece* piece);
 
 private:
 	/**

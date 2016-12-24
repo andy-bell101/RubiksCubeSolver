@@ -35,7 +35,18 @@ bool Piece::IsSolved()
 			return false;
 		}
 	}
+
 	return true;
+}
+
+bool Piece::PositionSolved()
+{
+	if (piecePosition.Equals(Vector3::VectorFromColours(pieceColours)) && IsSolved() == false)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 bool Piece::HasColour(Colour colourToFind)
@@ -71,6 +82,33 @@ bool Piece::HasColourOnFace(Colour tileColour, Colour faceColour)
 	for (pieceTiles_t::iterator i = pieceTiles.begin(), end = pieceTiles.end(); i != end; ++i)
 	{
 		if ((*i).GetTileColour() == tileColour && (*i).GetTileFace() == faceColour)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool Piece::IsEdgePiece()
+{
+	if (numTiles == 2) return true;
+
+	return false;
+}
+
+bool Piece::IsCornerPiece()
+{
+	if (numTiles == 3) return true;
+
+	return false;
+}
+
+bool Piece::TileIsOnFace(Colour tileColour, Colour faceColour)
+{
+	for each (Tile tile in pieceTiles)
+	{
+		if (tile.GetTileColour() == tileColour && tile.GetTileFace() == faceColour)
 		{
 			return true;
 		}

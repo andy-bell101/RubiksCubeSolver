@@ -40,9 +40,27 @@ public:
 	*/
 	bool IsSolved();
 
+	/**
+		Shuffles the cube by randomly generating a sequence of faces and rotation amounts to perform.
+		@param shuffleCount Integer representing the number of moves to perform in the shuffle.
+	*/
+	void Shuffle(int shuffleCount);
+
+	/**
+		Method to handle the solution steps.
+	*/
+	void SolveCube();
+
 private:
 	using pieces_t = std::list<Piece>;
+	using piecesRef_t = std::list<Piece*>;
 	using faces_t = std::list<Face>;
+
+	/**
+		Member variable to hold the currently hard coded bottom face.
+	*/
+	// TODO: Remove use of this hard coding to generalise the application.
+	Colour hardcodedBottomFace{ Colour::WHITE };
 
 	/**
 		Member variable to hold the cube pieces.
@@ -60,6 +78,11 @@ private:
 	Rotation rotation{};
 
 	/**
+		Member variable to hold the currently set directions of the faces.
+	*/
+	std::array<Colour, 6> directionToColour{};
+
+	/**
 		Method to return the passed colour's opposing colour on the cube.
 		@param inputColour The colour whose opposite we want to find.
 		@return opposingColour The colour on the opposite face of the cube to the colour passed.
@@ -73,10 +96,27 @@ private:
 	void ResetFaceReferences();
 
 	/**
-		Method to set the new directions of the cube e.g. setting the Blue face to be the Front face for use in algorithms.
-		@param faceColour The face whose direction we wish to set.
-		@param direction The direction we wish to set that face to.
+		Method to set the new directions of the cube by passing the desired front face.
+		e.g. setting the Blue face to be the Front face for use in algorithms.
+		@param faceColour The face whose front direction we wish to set.
 	*/
-	void SetCubeDirections( Colour faceColour, Direction direction );
+	void SetCubeDirections( Colour directionColour );
+
+	/**
+		Method to return the opposite direction the the passed direction.
+		@param inputDirection The direction we wish to invert.
+		@return Direction The opposite direction to the the direction passed.
+	*/
+	Direction GetOpposingDirection(Direction inputDirection);
+
+	/**
+		Method to reset the cube directions to Direction::NONE.
+	*/
+	void ClearCubeDirections();
+
+	/**
+		Sets up the 'top cross'.
+	*/
+	void TopCross();
 };
 

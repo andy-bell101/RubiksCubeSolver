@@ -80,6 +80,24 @@ public:
 	Vector3 static VectorFromColours(std::list<Colour> colours);
 
 	/**
+		Returns the cross product performed on the two passed vectors. The cross product vector is in a right-handed 
+		coordinate system e.g. the cross product of the unit i and unit j vector produces the unit k vector.
+		@param leftVector The left vector in the cross product.
+		@param rightVector The right vector in the cross product.
+		@return Vector3 The vector produced by the cross product.
+	*/
+	Vector3 static CrossProduct(Vector3 &leftVector, Vector3 &rightVector);
+
+	/**
+	Returns the cross product performed on the two passed colours as vectors . The cross product vector is in a right-handed
+	coordinate system e.g. the cross product of the unit i and unit j vector produces the unit k vector.
+	@param leftVector The left colour in the cross product.
+	@param rightVector The right colour in the cross product.
+	@return Vector3 The vector produced by the cross product, returned as a colour.
+	*/
+	Colour static CrossProduct(Colour &leftColour, Colour &rightColour);
+
+	/**
 		Returns a vector created by taking two or three passed colours, converting them to vectors then summing them.
 	*/
 	std::list<Colour> static ColoursFromVector(Vector3 &inputVector);
@@ -90,6 +108,12 @@ public:
 		@return bool Return true if the searchColour is in the vector's components, otherwise return false.
 	*/
 	bool CheckVectorForColour( Colour searchColour );
+
+	/**
+		Returns true if the passed vector is the same.
+		@return bool Returns true if the passed vector is the same.
+	*/
+	bool Equals(Vector3 &comparisonVector);
 
 private:
 	/**
