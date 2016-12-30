@@ -8,7 +8,7 @@ class Face
 {
 public:
 	/**
-		Class constructor that takes a colour to set the face's colour an adds any pieces that match the face colour to a reference list.
+		Class constructor that takes a colour to set the face's colour.
 		@param faceColour The desired colour of the face.
 	*/
 	Face(Colour faceColour);
@@ -17,7 +17,7 @@ public:
 	/**
 		Typedef of a list to hold the face's pieces.
 	*/
-	using piecesRef_t = std::list<Piece*>;
+	using piecesRef_t = std::list<Piece&>;
 
 	/**
 		Member variable to hold references to the face's pieces.
@@ -25,11 +25,10 @@ public:
 	piecesRef_t piecesRef{};
 
 	/**
-		Iterates through the passed list of references and adds any pieces that are on the face to the face's pieces member variable.
-		@param &inputPieces The list of pieces passed from the Cube class, from which the pieces on this face will be added to 
-							the piece member variable.
+		Adds the piece if it is on the face to the face's pieces member variable.
+		@param &inputPiece The piece passed from the Cube class, which will be added to the piece member variable.
 	*/
-	void AddPieceToFace( Piece* inputPiece );
+	void AddPieceToFace( Piece& inputPiece );
 
 	/**
 		Clears the pieces list for the face so that new faces can be added.
@@ -57,13 +56,13 @@ public:
 		Returns true if the tile of the passed colour is on this face.
 		@return bool Returns true if the tile of the passed colour is on this face, returns false otherwise.
 	*/
-	bool TileIsOnFace(Piece* piece,Colour tileColour);
+	bool TileIsOnFace(Piece& piece,Colour tileColour);
 
 	/**
 		Returns true if the passed piece is on this face.
 		@return bool Returns true if the passed piece is on this face, returns false otherwise.
 	*/
-	bool PieceIsOnFace(Piece* piece);
+	bool PieceIsOnFace(Piece& piece);
 
 private:
 	/**

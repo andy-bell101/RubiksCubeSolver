@@ -71,17 +71,17 @@ void Piece::Rotate(Rotation &rotation)
 {
 	rotation.Rotate(piecePosition);
 
-	for (pieceTiles_t::iterator i = pieceTiles.begin(), end = pieceTiles.end(); i != end; ++i)
+	for each (Tile tile in pieceTiles)
 	{
-		(*i).Rotate(rotation);
+		tile.Rotate(rotation);
 	}
 }
 
 bool Piece::HasColourOnFace(Colour tileColour, Colour faceColour)
 {
-	for (pieceTiles_t::iterator i = pieceTiles.begin(), end = pieceTiles.end(); i != end; ++i)
+	for each (Tile tile in pieceTiles)
 	{
-		if ((*i).GetTileColour() == tileColour && (*i).GetTileFace() == faceColour)
+		if (tile.GetTileColour() == tileColour && tile.GetTileFace() == faceColour)
 		{
 			return true;
 		}
@@ -117,17 +117,34 @@ bool Piece::TileIsOnFace(Colour tileColour, Colour faceColour)
 	return false;
 }
 
+list<Colour> Piece::GetPieceColours()
+{
+	return pieceColours;
+}
+
+Colour Piece::GetFaceTileIsOn(Colour tileColour)
+{
+	if (HasColour(tileColour) == false)
+	{
+		std::cerr << "Piece::GetFaceTileIsOn() was passed a colour that is not on the piece.";
+		return Colour::NONE;
+	}
+
+	for each (Tile tile in pieceTiles)
+	{
+		if (tile.GetTileColour() == tileColour)
+		{
+			return tile.GetTileFace();
+		}
+	}
+}
+
 void Piece::SetPiece(Piece::pieceColours_t colours)
 {
-	pieceColours = pieceColours_t{};
-	pieceTiles = pieceTiles_t{};
-	// What the fuck is going on here?! Black magic shit I got from the internet
-	// http://www.cplusplus.com/forum/general/22957/
-
-	for (pieceColours_t::const_iterator i = colours.begin(), end = colours.end(); i != end; ++i)
+	for each (Colour colour in colours)
 	{
-		this->pieceColours.push_back( *i );
-		this->pieceTiles.push_back( (Tile( *i )) );
+		this->pieceColours.push_back(colour);
+		this->pieceTiles.push_back(Tile(colour));
 	}
 
 	numTiles = pieceTiles.size();

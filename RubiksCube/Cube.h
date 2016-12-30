@@ -53,7 +53,7 @@ public:
 
 private:
 	using pieces_t = std::list<Piece>;
-	using piecesRef_t = std::list<Piece*>;
+	using piecesRef_t = std::list<Piece&>;
 	using faces_t = std::list<Face>;
 
 	/**
@@ -118,5 +118,15 @@ private:
 		Sets up the 'top cross'.
 	*/
 	void TopCross();
+
+	/**
+		Gets a reference to the piece at the meeting of the faces corresponding to the passed colours.
+		If looking for an edge piece, pass only two colours. If looking for a corner piece, pass three colours.
+		@param face1 The colour of the first face..
+		@param face2 The colour of the second face.
+		@param face3 = Colour::NONE Optional colour of the third face (only required if searching for a corner piece.
+		@return Piece* A reference to the piece at the matching position.
+	*/
+	Piece & GetPieceAt(Colour face1, Colour face2, Colour face3 = Colour::NONE);
 };
 

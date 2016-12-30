@@ -1,7 +1,7 @@
 #pragma once
 
-#include <array>
 #include <list>
+#include <iostream>
 #include "Tile.h"
 #include "Rotation.h"
 
@@ -131,7 +131,25 @@ public:
 
 	/**
 		Returns true if the piece has a tile of the passed colour that is on the face of the passed colour.
+		@param tileColour The colour of the tile we are interested in.
+		@param faceColour The colour of the face we are interested in.
+		@return bool Returns true if the piece has a tile of the passed colour that is on the face of the passed colour,
+				     otherwise returns false.
 	*/
 	bool TileIsOnFace(Colour tileColour, Colour faceColour);
+
+	/**
+		Returns a list of the piece's colours.
+		@return pieceColours_t A list of the piece's colours.
+	*/
+	pieceColours_t GetPieceColours();
+
+	/**
+		Determines and returns the face colour that the passed colour is on, provided the piece has that colour.
+		@param tileColour Colour of the tile we are interested in.
+		@return Colour The colour of the face that the tile is on, if the piece has that colour. Otherwise returns
+					   Colour::NONE.
+	*/
+	Colour GetFaceTileIsOn(Colour tileColour);
 };
 
