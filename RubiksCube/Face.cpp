@@ -12,17 +12,17 @@ Face::~Face()
 {
 }
 
-void Face::AddPieceToFace(Piece& inputPiece)
+void Face::AddPieceToFace(Piece* inputPiece)
 {
-	if (inputPiece.PieceIsOnFace(faceColour) == true)
+	if (inputPiece->PieceIsOnFace(faceColour) == true)
 	{
-		piecesRef.push_back(inputPiece);
+		piecesPtr.push_back(inputPiece);
 	}
 }
 
 void Face::ResetPieces()
 {
-	piecesRef.clear();
+	piecesPtr.clear();
 }
 
 Colour Face::GetFaceColour()
@@ -32,40 +32,40 @@ Colour Face::GetFaceColour()
 
 void Face::Rotate(Rotation &rotation)
 {
-	for each (Piece& pieceRef in piecesRef)
+	for each (Piece* piecePtr in piecesPtr)
 	{
-		pieceRef.Rotate(rotation);
+		piecePtr->Rotate(rotation);
 	}
 }
 
 bool Face::IsSolved()
 {
-	for each (Piece& pieceRef in piecesRef)
+	for each (Piece* piecePtr in piecesPtr)
 	{
-		pieceRef.IsSolved();
+		piecePtr->IsSolved();
 	}
 
 	return true;
 }
 
-bool Face::TileIsOnFace(Piece& piece, Colour tileColour)
+bool Face::TileIsOnFace(Piece* piece, Colour tileColour)
 {
 	if (PieceIsOnFace(piece) == true)
 	{
-		if (piece.HasColour(tileColour))
+		if (piece->HasColour(tileColour))
 		{
-			piece.TileIsOnFace(tileColour, faceColour);
+			piece->TileIsOnFace(tileColour, faceColour);
 		}
 	}
 
 	return false;
 }
 
-bool Face::PieceIsOnFace(Piece& piece)
+bool Face::PieceIsOnFace(Piece* piece)
 {
-	for each (Piece& pieceRef in piecesRef)
+	for each (Piece* piecePtr in piecesPtr)
 	{
-		if (pieceRef.GetPieceColours() == piece.GetPieceColours())
+		if (piecePtr->GetPieceColours() == piece->GetPieceColours())
 		{
 			return true;
 		}

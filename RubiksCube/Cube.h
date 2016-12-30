@@ -53,7 +53,7 @@ public:
 
 private:
 	using pieces_t = std::list<Piece>;
-	using piecesRef_t = std::list<Piece&>;
+	using piecesPtrs_t = std::list<Piece*>;
 	using faces_t = std::list<Face>;
 
 	/**
@@ -127,6 +127,6 @@ private:
 		@param face3 = Colour::NONE Optional colour of the third face (only required if searching for a corner piece.
 		@return Piece* A reference to the piece at the matching position.
 	*/
-	Piece & GetPieceAt(Colour face1, Colour face2, Colour face3 = Colour::NONE);
+	Piece * GetPieceAt(Colour face1, Colour face2, Colour face3 = Colour::NONE);
 };
 

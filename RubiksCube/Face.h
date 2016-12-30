@@ -17,18 +17,18 @@ public:
 	/**
 		Typedef of a list to hold the face's pieces.
 	*/
-	using piecesRef_t = std::list<Piece&>;
+	using piecesPtr_t = std::list<Piece*>;
 
 	/**
 		Member variable to hold references to the face's pieces.
 	*/
-	piecesRef_t piecesRef{};
+	piecesPtr_t piecesPtr{};
 
 	/**
 		Adds the piece if it is on the face to the face's pieces member variable.
-		@param &inputPiece The piece passed from the Cube class, which will be added to the piece member variable.
+		@param *inputPiece The piece passed from the Cube class, which will be added to the piece member variable.
 	*/
-	void AddPieceToFace( Piece& inputPiece );
+	void AddPieceToFace( Piece* inputPiece );
 
 	/**
 		Clears the pieces list for the face so that new faces can be added.
@@ -48,21 +48,25 @@ public:
 	void Rotate(Rotation &rotation);
 	/**
 		Returns whether the face is fully solved or not.
+		@param &rotation A reference to the current rotation class.
 		@return bool Returns true if the face is solved, false otherwise.
 	*/
 	bool IsSolved();
 
 	/**
 		Returns true if the tile of the passed colour is on this face.
+		@param *piece A pointer to the required piece.
+		@param tileColour The colour of the tile we are looking for.
 		@return bool Returns true if the tile of the passed colour is on this face, returns false otherwise.
 	*/
-	bool TileIsOnFace(Piece& piece,Colour tileColour);
+	bool TileIsOnFace(Piece* piece, Colour tileColour);
 
 	/**
 		Returns true if the passed piece is on this face.
+		@param *piece A pointer to the required piece.
 		@return bool Returns true if the passed piece is on this face, returns false otherwise.
 	*/
-	bool PieceIsOnFace(Piece& piece);
+	bool PieceIsOnFace(Piece* piece);
 
 private:
 	/**

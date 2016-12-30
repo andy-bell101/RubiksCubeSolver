@@ -51,7 +51,7 @@ Colour Vector3::ToColour()
 	{
 		// throw error
 		std::cerr << "Vector3::ToColour() - Vector has magnitude not equal to 1: ("
-			+ to_string(X) + "," + to_string(Y) + "," + to_string(Z) + ")";
+			+ to_string(X) + "," + to_string(Y) + "," + to_string(Z) + ")\n";
 		return Colour::NONE;
 	}
 

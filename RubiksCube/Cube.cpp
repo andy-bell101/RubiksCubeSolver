@@ -129,7 +129,7 @@ void Cube::ResetFaceReferences()
 			// TODO: Possibly implement more efficiently if possible.
 			for each (Piece piece in pieces)
 			{
-				face.AddPieceToFace(piece);
+				face.AddPieceToFace(&piece);
 			}
 		}
 	}
@@ -182,10 +182,10 @@ void Cube::ClearCubeDirections()
 
 void Cube::TopCross()
 {
-	// This will contain references to all the bottom edge pieces, regardless of their positioning
-	piecesRef_t bottomEdgePieces{};
-	// This will contain references to all the bottom edge pieces that are correctly positioned and oriented on the top face.
-	piecesRef_t positionedEdgePieces{};
+	// This will contain pointers to all the bottom edge pieces, regardless of their positioning
+	piecesPtrs_t bottomEdgePieces{};
+	// This will contain pointer to all the bottom edge pieces that are correctly positioned and oriented on the top face.
+	piecesPtrs_t positionedEdgePieces{};
 
 	Colour bottomColour{ directionToColour[(int)Direction::BOTTOM] };
 	Colour topColour{ directionToColour[(int)Direction::TOP] };
@@ -199,30 +199,36 @@ void Cube::TopCross()
 	{
 		if (piece.IsEdgePiece() && piece.HasColour(bottomColour))
 		{
-			bottomEdgePieces.push_back(piece);
+			// Works if piece is passed as a reference but not as a pointer?
+			// TODO: Help please
+			bottomEdgePieces.push_back(&piece);
 		}
 	}
 
 	// This loop builds the list of positionedEdgePieces if any are in the correct position and orientation.
-	for each (Piece& pieceRef in bottomEdgePieces)
+	for each (Piece* piecePtr in bottomEdgePieces)
 	{
-		if (pieceRef.TileIsOnFace(bottomColour, topColour) == true)
+		// For some reason the function ends up with a piece that has no tiles in the list. Why.
+		// Checked all the pieces on the cube and they have tiles so there must be an issue with lists
+		// and getting an object from a pointer.
+		// TODO: Help
+		if (piecePtr->TileIsOnFace(bottomColour, topColour) == true)
 		{
-			positionedEdgePieces.push_back(pieceRef);
+			positionedEdgePieces.push_back(piecePtr);
 		}
 	}
 
 	// Run through all the bottom edge pieces and position them.
-	for each (Piece& pieceRef in bottomEdgePieces)
+	for each (Piece* piecePtr in bottomEdgePieces)
 	{
 		// Here we check that the piece isn't already in the correct position. As a result of some rotations we might
 		// position the piece correctly unintentionally. We catch that case here and add it to the positionedEdgePieces
 		// in the else statement.
-		if (pieceRef.TileIsOnFace(bottomColour, topColour) == false)
+		if (piecePtr->TileIsOnFace(bottomColour, topColour) == false)
 		{
 			// Since we are using generalised piece classes and not specific edge and corner piece classes we need to iterate
 			// through the list of colours to get the other colour on the edge piece.
-			for each (Colour colour in pieceRef.GetPieceColours())
+			for each (Colour colour in piecePtr->GetPieceColours())
 			{
 				if (colour != bottomColour)
 				{
@@ -231,7 +237,7 @@ void Cube::TopCross()
 				}
 			}
 
-			faceToRotate = pieceRef.GetFaceTileIsOn(otherPieceColour);
+			faceToRotate = piecePtr->GetFaceTileIsOn(otherPieceColour);
 
 			// If faceToRotate corresponds to the top or bottom face then there is no single rotation that will
 			// get us where we want. We have to deal with this case.
@@ -240,9 +246,9 @@ void Cube::TopCross()
 				// Make sure that the rotation won't displace any of the pieces we've already positioned.
 				if (positionedEdgePieces.size() != 0)
 				{
-					Piece& pieceOnRotateAndTopFaces{ GetPieceAt(faceToRotate, topColour) };
+					Piece* pieceOnRotateAndTopFaces{ GetPieceAt(faceToRotate, topColour) };
 
-					for each (Piece& positionedEdgePiece in positionedEdgePieces)
+					for each (Piece* positionedEdgePiece in positionedEdgePieces)
 					{
 
 					}
@@ -261,12 +267,12 @@ void Cube::TopCross()
 		}
 		else
 		{
-			positionedEdgePieces.push_back(pieceRef);
+			positionedEdgePieces.push_back(piecePtr);
 		}
 	}
 }
 
-Piece & Cube::GetPieceAt(Colour face1, Colour face2, Colour face3)
+Piece * Cube::GetPieceAt(Colour face1, Colour face2, Colour face3)
 {
 	Vector3 vector1{ face1 };
 	Vector3 vector2{ face2 };
@@ -286,7 +292,7 @@ Piece & Cube::GetPieceAt(Colour face1, Colour face2, Colour face3)
 		piecePosition = piece.GetPiecePositionReference();
 		if (piecePosition.Equals(resultantVector) == true)
 		{
-			return piece;
+			return (&piece);
 		}
 	}
 

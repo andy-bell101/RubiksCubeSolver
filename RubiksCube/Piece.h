@@ -9,7 +9,7 @@ using namespace std;
 
 class Piece
 {
-protected:
+private:
 	/**
 		Member variable to define the number of tiles that this piece has.
 	*/
@@ -17,16 +17,16 @@ protected:
 
 public:
 	/**
-		Typedef of std::array of colours to contain the piece's colours.
+		Typedef of std::list of colours to contain the piece's colours.
 	*/
 	using pieceColours_t = list<Colour>;
 
 	/**
-		Typedef of a std::array to store the tiles associated with this piece
+		Typedef of a std::list to store the tiles associated with this piece
 	*/
 	using pieceTiles_t = list<Tile>;
 
-protected:
+private:
 	/**
 		Container for the piece's tiles.
 	*/
